@@ -42,7 +42,31 @@ window.onload = function () {
         setMouseCoordinates(event);
 
         if(isDrawing) {
-            console.log(context.strokeStyle, mouseX, mouseY)
+            let data = {
+                x_val: mouseX,
+                y_val: mouseY,
+                color: context.strokeStyle
+            }
+
+            let jsonData = JSON.stringify(data);
+
+            fetch(`http://localhost:${window.location.port}/api/publish`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: jsonData
+            })
+                .then(response => {
+                    if (response.ok)
+                    {
+                        console.log('Data sent');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
             context.lineTo(mouseX, mouseY);
             context.stroke();
         }

@@ -14,12 +14,14 @@ class PlaygroundEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $data;
+
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -29,7 +31,7 @@ class PlaygroundEvent implements ShouldBroadcast
      */
     public function broadcastOn(): Channel
     {
-        return new Channel('public.playground.1');
+        return new Channel('public.playground.pusher');
     }
 
     public function broadcastAs()
@@ -40,7 +42,9 @@ class PlaygroundEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'name' => 'Laravel'
+            'color' => $this->data->color,
+            'x_val' => $this->data->x_val,
+            'y_val' => $this->data->y_val
         ];
     }
 }

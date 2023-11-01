@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,8 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/ws', function () {
+// port: 8000 -> subscriber
+// port: 8002 -> publisher
+
+Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('playground', [\App\Http\Controllers\EventController::class, 'fireEvent']);

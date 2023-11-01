@@ -58,7 +58,8 @@
                 <canvas id="paint-canvas" width="640" height="400"></canvas>
             </div>
         </main>
-{{--        <script src="{{ mix('js/app.js') }}"></script>--}}
+        <script src="{{ mix('js/app.js') }}"></script>
         <script src="{{ mix('js/playground.js') }}"></script>
+
     </body>
 </html>
