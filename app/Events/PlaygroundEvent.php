@@ -46,7 +46,9 @@ class PlaygroundEvent implements ShouldBroadcast
         return [
             'color' => $response['color'],
             'x_val' => $response['x_val'],
-            'y_val' => $response['y_val']
+            'y_val' => $response['y_val'],
+            'start' => $response['start'],
+            'end'   => $response['end']
         ];
     }
 }

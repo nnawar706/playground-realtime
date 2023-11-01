@@ -12485,14 +12485,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
 
 
-var channel = window.Echo.channel('public.playground.pusher');
-if (window.location.port === '8000') {
-  channel.subscribed(function () {
-    console.log('subscribed to channel.');
-  }).listen('.playground', function (event) {
-    console.log(event);
-  });
-}
 
 /***/ }),
 

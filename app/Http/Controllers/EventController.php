@@ -13,7 +13,9 @@ class EventController extends Controller
         $data = array(
             'color'     => $request->color,
             'x_val'     => $request->x_val,
-            'y_val'     => $request->y_val
+            'y_val'     => $request->y_val,
+            'start'     => $request->start,
+            'end'       => $request->end
         );
 
         Redis::publish('public.playground.1', json_encode($data));

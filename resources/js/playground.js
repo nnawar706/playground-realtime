@@ -1,5 +1,7 @@
 window.onload = function () {
 
+    const channel = window.Echo.channel('public.playground.pusher');
+
     // Definitions
     let canvas = document.getElementById("paint-canvas");
     let context = canvas.getContext("2d");
@@ -12,6 +14,31 @@ window.onload = function () {
     context.lineWidth = 1; // initial brush width
     let isDrawing = false;
 
+    if(window.location.port === '8000') {
+        channel.subscribed(() => {
+            console.log('subscribed to channel.');
+        }).listen('.playground', (event) => {
+            // console.log(event);
+            mouseX = event.x_val;
+            mouseY = event.y_val;
+            context.strokeStyle = event.color;
+
+            if (event.start === 1) // mousedown event from publisher
+            {
+                context.beginPath();
+                context.moveTo(mouseX, mouseY);
+            }
+            else if (event.end === 1) // mouseup event from publisher
+            {
+                isDrawing = false;
+            }
+            else // mousemove event from publisher
+            {
+                context.lineTo(mouseX, mouseY);
+                context.stroke();
+            }
+        });
+    }
 
     // Handle Colors
     let colors = document.getElementsByClassName('colors')[0];
@@ -35,6 +62,10 @@ window.onload = function () {
         // Start Drawing
         context.beginPath();
         context.moveTo(mouseX, mouseY);
+
+        if (window.location.port === '8002') {
+            publishMessage(1, 0)
+        }
     });
 
     // Mouse Move Event
@@ -42,33 +73,13 @@ window.onload = function () {
         setMouseCoordinates(event);
 
         if(isDrawing) {
-            let data = {
-                x_val: mouseX,
-                y_val: mouseY,
-                color: context.strokeStyle
-            }
-
-            let jsonData = JSON.stringify(data);
-
-            fetch(`http://localhost:${window.location.port}/api/publish`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: jsonData
-            })
-                .then(response => {
-                    if (response.ok)
-                    {
-                        console.log('Data sent');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
 
             context.lineTo(mouseX, mouseY);
             context.stroke();
+
+            if (window.location.port === '8002') {
+                publishMessage(0, 0)
+            }
         }
     });
 
@@ -76,12 +87,45 @@ window.onload = function () {
     canvas.addEventListener('mouseup', function(event) {
         setMouseCoordinates(event);
         isDrawing = false;
+
+        if (window.location.port === '8002') {
+            publishMessage(0, 1)
+        }
     });
 
     // Handle Mouse Coordinates
     function setMouseCoordinates(event) {
         mouseX = event.clientX - bounding.left;
         mouseY = event.clientY - bounding.top;
+    }
+
+    // publish message to redis
+    function publishMessage(beginPath, endPath) {
+        let data = {
+            x_val: mouseX,
+            y_val: mouseY,
+            color: context.strokeStyle,
+            start: beginPath,
+            end: endPath
+        }
+
+        let jsonData = JSON.stringify(data);
+
+        fetch(`http://localhost:${window.location.port}/api/publish`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: jsonData
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Data sent');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
     // Handle Clear Button
