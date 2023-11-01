@@ -1,7 +1,5 @@
 window.onload = function () {
 
-    const channel = window.Echo.channel('public.playground.pusher');
-
     // Definitions
     let canvas = document.getElementById("paint-canvas");
     let context = canvas.getContext("2d");
@@ -14,7 +12,9 @@ window.onload = function () {
     context.lineWidth = 1; // initial brush width
     let isDrawing = false;
 
-    if(window.location.port === '8000') {
+    if(window.location.port !== '8002') {
+        const channel = window.Echo.channel('public.playground.pusher');
+
         channel.subscribed(() => {
             console.log('subscribed to channel.');
         }).listen('.playground', (event) => {

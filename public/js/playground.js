@@ -22,8 +22,6 @@ var __webpack_exports__ = {};
   \************************************/
 __webpack_require__.r(__webpack_exports__);
 window.onload = function () {
-  var channel = window.Echo.channel('public.playground.pusher');
-
   // Definitions
   var canvas = document.getElementById("paint-canvas");
   var context = canvas.getContext("2d");
@@ -35,7 +33,8 @@ window.onload = function () {
   context.strokeStyle = 'black'; // initial brush color
   context.lineWidth = 1; // initial brush width
   var isDrawing = false;
-  if (window.location.port === '8000') {
+  if (window.location.port !== '8002') {
+    var channel = window.Echo.channel('public.playground.pusher');
     channel.subscribed(function () {
       console.log('subscribed to channel.');
     }).listen('.playground', function (event) {

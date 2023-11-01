@@ -7,7 +7,7 @@
         <title>Play With Colors</title>
         <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     </head>
-    <body>
+    <body style="background-color: #c3c3c3">
         <main>
             <div class="left-block">
                 <div class="colors">
