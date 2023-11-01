@@ -16,6 +16,6 @@ class EventController extends Controller
             'y_val'     => $request->y_val
         );
 
-        Redis::publish('public.playground.1', $data);
+        Redis::publish('public.playground.1', json_encode($data));
     }
 }

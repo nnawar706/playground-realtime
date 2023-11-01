@@ -41,10 +41,12 @@ class PlaygroundEvent implements ShouldBroadcast
 
     public function broadcastWith()
     {
+        $response = json_decode($this->data, true);
+
         return [
-            'color' => $this->data->color,
-            'x_val' => $this->data->x_val,
-            'y_val' => $this->data->y_val
+            'color' => $response['color'],
+            'x_val' => $response['x_val'],
+            'y_val' => $response['y_val']
         ];
     }
 }

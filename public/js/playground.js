@@ -60,7 +60,25 @@ window.onload = function () {
   canvas.addEventListener('mousemove', function (event) {
     setMouseCoordinates(event);
     if (isDrawing) {
-      console.log(context.strokeStyle, mouseX, mouseY);
+      var data = {
+        x_val: mouseX,
+        y_val: mouseY,
+        color: context.strokeStyle
+      };
+      var jsonData = JSON.stringify(data);
+      fetch("http://localhost:".concat(window.location.port, "/api/publish"), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonData
+      }).then(function (response) {
+        if (response.ok) {
+          console.log('Data sent');
+        }
+      })["catch"](function (error) {
+        console.error('Error:', error);
+      });
       context.lineTo(mouseX, mouseY);
       context.stroke();
     }
